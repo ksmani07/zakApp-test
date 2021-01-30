@@ -3,14 +3,28 @@ import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { AutoTitleComponent } from './auto-title/auto-title.component';
+import { SortablejsModule } from 'ngx-sortablejs';
+import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ModifyTitlePipe } from './modify-title.pipe';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    AutoTitleComponent,
+    ModifyTitlePipe
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    FormsModule,
+    ReactiveFormsModule,
+    NgbModule,
+    SortablejsModule,
+    NgMultiSelectDropDownModule.forRoot()
+
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -1,0 +1,43 @@
+<div class="container-fluid">
+  <h6>Create auto-title that will update based on the product attributes</h6>
+  <div class="row">
+    <div class="col-8">
+      <div class="d-flex align-items-center mb-4" *ngFor="let title of autoTileForm;let i = index">
+        <p class="mr-4 mb-0"><b>{{title?.autoId}}</b></p>
+        <div [sortablejs]="title.autoTitle" class="auto-title d-flex">
+          <div *ngFor="let item of title.autoTitle" class="option d-flex align-items-center">
+            <i class="fa fa-ellipsis-v mr-1"></i><i class="fa fa-ellipsis-v"></i>
+            <span class="ml-2" *ngIf="!item?.editable">[{{ item?.value }}]</span>
+            <span class="ml-2" *ngIf="item?.editable">
+              <input type="text" [(ngModel)]="item.value">
+            </span>
+            <span class="remove" (click)="removeOption(item, i)"> <i class="fa fa-times-circle"></i> </span>
+    
+          </div>
+        </div>
+        <div class="available-option ml-2" ngbDropdown autoClose="outside">
+          <a ngbDropdownToggle><i class="fa fa-cog"></i></a>
+          <div ngbDropdownMenu>
+            <button ngbDropdownItem *ngFor="let item of autoTitleOptions;let j=index"
+              (click)="addOption(item, i); item?.selected != item?.selected"> <i class="fa fa-check"
+                *ngIf="getSelected(item, i)"></i> [{{ item?.value }}]
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="mt-3 fit-width">
+        <a class="d-flex align-items-center" (click)="addAutoTitle()"><i class="fa fa-plus-circle"></i> Add Autotitle</a>
+      </div>
+    </div>
+    <div class="col">
+        <div class="d-flex align-items-center">
+          <p class="mb-0">Auto apply to all new products (Optional)</p>
+          <select class="custom-select title-apply width-30" *ngIf="autoTileForm.length" [(ngModel)]="selectedTitleId" >
+            <option *ngFor="let title of autoTileForm;let i = index" value="{{title?.autoId}}" >{{title?.autoId}}</option>
+          </select>
+        </div>
+        <div class="text-primary mt-3">{{titles | modifyTitle:selectedTitleId:autoTileForm}}</div>
+    </div>
+  </div>
+  
+</div>
