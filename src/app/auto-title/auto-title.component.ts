@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
+import { AutoTitleService } from '../auto-title.service';
 
 @Component({
   selector: 'app-auto-title',
@@ -10,6 +11,8 @@ export class AutoTitleComponent implements OnInit {
   autoTileForm = [];
   public autoTitles = [];
   public selectedTitleId = '';
+  public apiInprocess = false;
+  public autotitleChanges = false;
   public titles = [
     {
       title: 'Apple iPhone 15GB',
@@ -73,9 +76,24 @@ export class AutoTitleComponent implements OnInit {
       },
     ];
 
-  constructor(private fb: FormBuilder) { }
+  constructor(private autoTitleService: AutoTitleService) { }
 
   ngOnInit(): void {
+    this.getAutoTitle();
+  }
+
+  getAutoTitle() {
+    this.autoTitleService.getAutoTitle().subscribe(data => {
+      if (data?.result?.length) {
+        data?.result.forEach(titles => {
+          const options = {
+            autoId: titles?.autoId,
+            autoTitle: JSON.parse(titles?.options)
+          };
+          this.autoTileForm.push(options);
+        });
+      }
+    });
   }
 
   newAutotitleOption(option) {
@@ -96,25 +114,49 @@ export class AutoTitleComponent implements OnInit {
       autoTitle: []
     };
     options.autoTitle.push(this.newAutotitleOption(defaultOption[0]));
-    this.autoTileForm.push(options);
+    // create auto title
+    this.apiInprocess = true;
+    this.autoTitleService.createAutoTitle(options).subscribe(data => {
+      console.log('data', data);
+      this.autoTileForm.push(options);
+      this.apiInprocess = false;
+    }, error => {
+      this.apiInprocess = false;
+    });
   }
+
   addOption(option, index) {
+    this.autotitleChanges = true;
     const findIndex = this.autoTileForm[index]?.autoTitle.findIndex(opt => opt['name'] === option?.['name']);
-    if (findIndex < 0){
+    if (findIndex < 0) {
       this.autoTileForm[index].autoTitle.push(this.newAutotitleOption(option));
     } else {
       this.autoTileForm[index].autoTitle.splice(findIndex, 1);
     }
   }
 
-  removeOption(option, index){
+  removeOption(option, index) {
+    this.autotitleChanges = true;
     const findIndex = this.autoTileForm[index]?.autoTitle.findIndex(opt => opt['name'] === option?.['name']);
-    if (findIndex >= 0){
+    if (findIndex >= 0) {
       this.autoTileForm[index].autoTitle.splice(findIndex, 1);
-    } 
+    }
   }
 
   getSelected(option, index) {
-   return this.autoTileForm[index]?.autoTitle.find(opt => opt['name'] === option?.['name']);
+    return this.autoTileForm[index]?.autoTitle.find(opt => opt['name'] === option?.['name']);
+  }
+
+  updateAutoTitle() {
+    this.apiInprocess = true;
+    this.autotitleChanges = false;
+    this.autoTileForm.forEach(autotitle => {
+      this.autoTitleService.updateAutoTitle(autotitle?.['autoId'], autotitle).subscribe(data => {
+        this.apiInprocess = false;
+      }, error => {
+        this.autotitleChanges = true;
+        this.apiInprocess = false;
+      });
+    });
   }
 }

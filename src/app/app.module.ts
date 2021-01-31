@@ -9,6 +9,7 @@ import { SortablejsModule } from 'ngx-sortablejs';
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ModifyTitlePipe } from './modify-title.pipe';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -21,6 +22,7 @@ import { ModifyTitlePipe } from './modify-title.pipe';
     AppRoutingModule,
     FormsModule,
     ReactiveFormsModule,
+    HttpClientModule,
     NgbModule,
     SortablejsModule,
     NgMultiSelectDropDownModule.forRoot()

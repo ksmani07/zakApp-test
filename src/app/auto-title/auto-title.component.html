@@ -25,8 +25,11 @@
           </div>
         </div>
       </div>
-      <div class="mt-3 fit-width">
-        <a class="d-flex align-items-center" (click)="addAutoTitle()"><i class="fa fa-plus-circle"></i> Add Autotitle</a>
+      <div class="mt-3  d-flex justify-content-between col-10">
+        <a class="d-flex align-items-center fit-width" (click)="addAutoTitle()"><i class="fa fa-plus-circle"></i> Add Autotitle</a>
+        
+        <button type="button" class="btn btn-success" (click)="updateAutoTitle()" [disabled]="apiInprocess || !autotitleChanges">Changes Update</button>
+
       </div>
     </div>
     <div class="col">
